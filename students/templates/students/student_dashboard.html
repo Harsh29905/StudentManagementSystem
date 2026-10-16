@@ -1,0 +1,82 @@
+{% extends "students/base.html" %}
+{% block page_intro %}{% endblock %}
+{% block navigation %}
+<nav class="nav-links">
+    <a href="{% url 'student_dashboard' %}">Dashboard</a>
+    <a href="{% url 'student_list' %}">View Students</a>
+    <a href="{% url 'student_create' %}">Add Student</a>
+    <a href="{% url 'course_list' %}">Manage Courses</a>
+    <a href="{% url 'reports' %}">Reports</a>
+</nav>
+
+<div class="nav-user">
+    <span>Welcome, {{ request.user.username }}</span>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block title %}Dashboard | Student Management{% endblock %}
+
+{% block heading %}Student Management Dashboard{% endblock %}
+
+{% block description %}
+Manage students, courses, academic performance, and reports in one place.
+{% endblock %}
+
+{% block content %}
+
+<!-- Statistics -->
+<section class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Students</h3>
+        <p class="stat-number">{{ total_students|default:0 }}</p>
+        <a href="{% url 'student_list' %}">View Students</a>
+    </div>
+
+    <div class="stat-card">
+        <h3>Total Courses</h3>
+        <p class="stat-number">{{ total_courses|default:0 }}</p>
+        <a href="{% url 'course_list' %}">Manage Courses</a>
+    </div>
+
+    <div class="stat-card">
+        <h3>Average Marks</h3>
+        <p class="stat-number">
+            {% if average_marks != None %}
+                {{ average_marks|floatformat:2 }}
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <a href="{% url 'reports' %}">View Reports</a>
+    </div>
+</section>
+
+<!-- Quick Actions -->
+<section class="panel">
+    <h2>Quick Actions</h2>
+
+    <div class="quick-actions">
+        <a href="{% url 'student_create' %}" class="primary-btn">
+            Add Student
+        </a>
+
+        <a href="{% url 'student_list' %}" class="secondary-btn">
+            Search Students
+        </a>
+
+        <a href="{% url 'course_list' %}" class="secondary-btn">
+            Manage Courses
+        </a>
+
+        <a href="{% url 'reports' %}" class="secondary-btn">
+            Reports and Charts
+        </a>
+    </div>
+</section>
+
+{% endblock %}

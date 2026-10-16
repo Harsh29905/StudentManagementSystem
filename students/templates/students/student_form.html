@@ -1,0 +1,48 @@
+
+{% extends "students/base.html" %}
+
+{% block title %}{{ title|default:"Edit Student" }} | Student Management{% endblock %}
+
+{% block navigation %}
+<nav class="nav-links">
+    <a href="{% url 'student_dashboard' %}">Dashboard</a>
+    <a href="{% url 'student_list' %}">View Students</a>
+    <a href="{% url 'student_create' %}">Add Student</a>
+    <a href="{% url 'course_list' %}">Manage Courses</a>
+    <a href="{% url 'reports' %}">Reports</a>
+</nav>
+
+<div class="nav-user">
+    <span>{{ request.user.username }}</span>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+    <h1>{{ title|default:"Edit Student" }}</h1>
+    <p class="subtitle">
+        Update the student's information below.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div class="form-actions">
+            <button type="submit" class="primary-btn">
+                Save Changes
+            </button>
+
+            <a href="{% url 'student_list' %}"
+               class="secondary-btn">
+                Cancel
+            </a>
+        </div>
+    </form>
+</section>
+{% endblock %}

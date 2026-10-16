@@ -1,0 +1,23 @@
+
+{% extends "students/base.html" %}
+
+{% block title %}Register | Student Management{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+    <h1>Create an Account</h1>
+    <p class="subtitle">Register to manage student records.</p>
+
+    <form method="post" class="data-form">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="primary-btn">Register</button>
+    </form>
+
+    <p>Already have an account?
+        <a href="{% url 'login' %}">Login here</a>
+    </p>
+</section>
+{% endblock %}

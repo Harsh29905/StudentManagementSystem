@@ -1,0 +1,94 @@
+
+{% extends "students/base.html" %}
+
+{% block title %}View Students{% endblock %}
+
+{% block navigation %}
+<nav class="nav-links">
+    <a href="{% url 'student_dashboard' %}">Dashboard</a>
+    <a href="{% url 'student_list' %}">View Students</a>
+    <a href="{% url 'student_create' %}">Add Student</a>
+    <a href="{% url 'course_list' %}">Manage Courses</a>
+    <a href="{% url 'reports' %}">Reports</a>
+</nav>
+<div class="nav-user">
+    <span>{{ request.user.username }}</span>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="section-heading">
+    <div>
+        <h1>View Students</h1>
+        <p class="subtitle">Search, filter, and sort student records.</p>
+    </div>
+    <a href="{% url 'student_create' %}" class="primary-btn">Add Student</a>
+</div>
+
+<form method="get" class="filter-form">
+    <input type="text" name="q" value="{{ query }}"
+           placeholder="Search by name or email">
+
+    <select name="course">
+        <option value="">All Courses</option>
+        {% for course in courses %}
+            <option value="{{ course.id }}"
+                {% if selected_course == course.id|stringformat:"s" %}
+                    selected
+                {% endif %}>
+                {{ course.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="ordering">
+        <option value="name" {% if ordering == "name" %}selected{% endif %}>Name A-Z</option>
+        <option value="-name" {% if ordering == "-name" %}selected{% endif %}>Name Z-A</option>
+        <option value="age" {% if ordering == "age" %}selected{% endif %}>Age ascending</option>
+        <option value="-age" {% if ordering == "-age" %}selected{% endif %}>Age descending</option>
+        <option value="marks" {% if ordering == "marks" %}selected{% endif %}>Marks ascending</option>
+        <option value="-marks" {% if ordering == "-marks" %}selected{% endif %}>Marks descending</option>
+    </select>
+
+    <button type="submit" class="primary-btn">Search</button>
+    <a href="{% url 'student_list' %}" class="secondary-btn">Reset</a>
+</form>
+
+<section class="panel table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Age</th>
+                <th>Course</th>
+                <th>Marks</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.age }}</td>
+                <td>{{ student.course.name }}</td>
+                <td>{{ student.marks }}/100</td>
+                <td>
+                    <a href="{% url 'student_update' student.id %}" class="primary-btn">Edit</a>
+                    <a href="{% url 'student_delete' student.id %}" class="delete-btn">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No students found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

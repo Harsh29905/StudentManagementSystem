@@ -1,0 +1,39 @@
+
+{% extends "students/base.html" %}
+
+{% block title %}Login | Student Management{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+    <h1>Login to Your Account</h1>
+    <p class="subtitle">Enter your username and password.</p>
+
+    {% if form.errors %}
+        <p class="message">Invalid username or password. Please try again.</p>
+    {% endif %}
+
+    <form method="post" class="data-form">
+        {% csrf_token %}
+
+        <div>
+            <label for="id_username">Username</label>
+            <input type="text" name="username" id="id_username"
+                   autocomplete="username" required>
+        </div>
+
+        <div>
+            <label for="id_password">Password</label>
+            <input type="password" name="password" id="id_password"
+                   autocomplete="current-password" required>
+        </div>
+
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <button type="submit" class="primary-btn">Login</button>
+    </form>
+
+    <p>Don't have an account?
+        <a href="{% url 'register' %}">Register here</a>
+    </p>
+</section>
+{% endblock %}

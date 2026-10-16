@@ -1,0 +1,51 @@
+
+{% extends "students/base.html" %}
+
+{% block title %}Manage Courses{% endblock %}
+
+{% block navigation %}
+<nav class="nav-links">
+    <a href="{% url 'student_dashboard' %}">Dashboard</a>
+    <a href="{% url 'student_list' %}">View Students</a>
+    <a href="{% url 'student_create' %}">Add Student</a>
+    <a href="{% url 'course_list' %}">Manage Courses</a>
+    <a href="{% url 'reports' %}">Reports</a>
+</nav>
+<div class="nav-user">
+    <span>{{ request.user.username }}</span>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>Manage Courses</h1>
+<p class="subtitle">Add courses and view available courses.</p>
+
+<div class="two-column">
+    <section class="form-panel">
+        <h2>Add Course</h2>
+
+        <form method="post" class="data-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="primary-btn">Save Course</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Available Courses</h2>
+
+        {% for course in courses %}
+            <div class="course-item">
+                <h3>{{ course.name }}</h3>
+                <p>Duration: {{ course.duration }}</p>
+            </div>
+        {% empty %}
+            <p>No courses have been added yet.</p>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

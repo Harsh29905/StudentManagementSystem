@@ -1,0 +1,67 @@
+
+{% extends "students/base.html" %}
+
+{% block title %}Reports | Student Management{% endblock %}
+
+{% block navigation %}
+<nav class="nav-links">
+    <a href="{% url 'student_dashboard' %}">Dashboard</a>
+    <a href="{% url 'student_list' %}">View Students</a>
+    <a href="{% url 'student_create' %}">Add Student</a>
+    <a href="{% url 'course_list' %}">Manage Courses</a>
+    <a href="{% url 'reports' %}">Reports</a>
+</nav>
+<div class="nav-user">
+    <span>{{ request.user.username }}</span>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>Reports and Performance</h1>
+<p class="subtitle">Review student marks and academic performance.</p>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Students</h3>
+        <p class="stat-number">{{ total_students|default:0 }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Average Marks</h3>
+        <p class="stat-number">
+            {% if average_marks != None %}
+                {{ average_marks|floatformat:1 }}
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<section class="panel">
+    <h2>Top 5 Students</h2>
+
+    {% for student in top_students %}
+        <div class="report-row">
+            <div class="report-label">
+                <span>{{ student.name }}</span>
+                <strong>{{ student.marks }}/100</strong>
+            </div>
+
+            <div class="progress-track">
+                <progress class="marks-progress"
+                          value="{{ student.marks }}"
+                          max="100">
+                    {{ student.marks }}%
+                </progress>
+            </div>
+        </div>
+    {% empty %}
+        <p>No student records available to generate a report.</p>
+    {% endfor %}
+</section>
+{% endblock %}
